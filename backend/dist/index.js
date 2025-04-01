@@ -17,6 +17,8 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const axios_1 = __importDefault(require("axios"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.get('/', (req, res) => {
@@ -35,7 +37,7 @@ app.post('/generate-token', (req, res) => {
                 isEnabled: false
             }
         }
-    }, "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl", { expiresIn: "1h" });
+    }, process.env.FERMION_API_KEY, { expiresIn: "1h" });
     console.log("JWTTTTT \n" + jwtToken);
     res.json({ jwtToken });
 });
@@ -43,7 +45,7 @@ app.post('/live-session-token', (req, res) => {
     const jwtToken = jsonwebtoken_1.default.sign({
         liveEventSessionId: "67b57a08db93277aec0e4a9a",
         userId: "<enter a user ID here unique to every user>"
-    }, "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl", { expiresIn: "1h" });
+    }, process.env.FERMION_API_KEY, { expiresIn: "1h" });
     res.json({ jwtToken });
 });
 // Qutane
@@ -62,7 +64,7 @@ app.post('/coding-io-token', (req, res) => {
         const jwtToken = jsonwebtoken_1.default.sign({
             labId: '67b45bbcd5395263fe8ebe11',
             userId: '<enter a user ID here unique to every user>',
-        }, "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl", { expiresIn: '1h' });
+        }, process.env.FERMION_API_KEY, { expiresIn: '1h' });
         res.json({ jwtToken });
     }
     catch (error) {
@@ -77,7 +79,7 @@ app.post('/generate-embed-token', (req, res) => {
         return res.status(400).json({ error: 'labId and userId are required' });
     }
     try {
-        const jwtToken = jsonwebtoken_1.default.sign({ labId, userId }, "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl", { expiresIn: '1h' });
+        const jwtToken = jsonwebtoken_1.default.sign({ labId, userId }, process.env.FERMION_API_KEY, { expiresIn: '1h' });
         res.json({ jwtToken });
     }
     catch (error) {
@@ -98,7 +100,7 @@ app.post('/lab-results', (req, res) => __awaiter(void 0, void 0, void 0, functio
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'FERMION-API-KEY': '7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl',
+                    'FERMION-API-KEY': process.env.FERMION_API_KEY,
                 },
             });
             const output = (_a = response.data[0]) === null || _a === void 0 ? void 0 : _a.output;

@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken"
 import cors from "cors"
 const app: Express = express();
 import axios from "axios"
+import dotenv from 'dotenv';
+dotenv.config();
 app.use(cors())
 app.use(express.json())
 app.get('/',(req,res) => {
@@ -25,7 +27,7 @@ app.post('/generate-token', (req, res) => {
                 }
             }
         },
-        "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl",
+        process.env.FERMION_API_KEY as string,
         { expiresIn: "1h" }
     );
     console.log("JWTTTTT \n" + jwtToken);
@@ -40,7 +42,7 @@ app.post('/live-session-token', (req,res)=>{
           liveEventSessionId: "67b57a08db93277aec0e4a9a",
           userId: "<enter a user ID here unique to every user>"
         },
-        "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl",
+        process.env.FERMION_API_KEY as string,
         { expiresIn: "1h" }
     );
     res.json({jwtToken})
@@ -70,7 +72,7 @@ app.post('/coding-io-token', (req, res) => {
           labId: '67b45bbcd5395263fe8ebe11',
           userId: '<enter a user ID here unique to every user>',
         },
-        "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl",
+        process.env.FERMION_API_KEY as string,
         { expiresIn: '1h' }
       );
       res.json({ jwtToken });
@@ -96,7 +98,7 @@ app.post('/generate-embed-token', (req: any, res: any) => {
   try {
     const jwtToken = jwt.sign(
       { labId, userId },
-      "7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl",
+      process.env.FERMION_API_KEY as string,
       { expiresIn: '1h' }
     );
     res.json({ jwtToken });
@@ -125,7 +127,7 @@ app.post('/lab-results', async (req: any, res: any) => {
           {
             headers: {
               'Content-Type': 'application/json',
-              'FERMION-API-KEY': '7aqzj3mievef6o0islunum4ia3psrqvcyygqzmevdb1og2r3o5868e8lisopvb2x0jhkjj5w6z6aau52wxgctxpkzw8udrgb734idm3z0928l1x1lcdjkii7uj5e1jpl',
+              'FERMION-API-KEY': process.env.FERMION_API_KEY as string,
             },
           }
         );
