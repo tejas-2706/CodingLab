@@ -50,10 +50,11 @@ app.post('/live-session-token', (req, res) => {
 });
 // Qutane
 const questions = [
-    // { id: '1', labId: '67b5809921b8ad7af5c7c718', timeLimit: 10 }, // 5 minutes
-    // { id: '2', labId: '67b45bbcd5395263fe8ebe11', timeLimit: 20 }, // 10 minutes
-    // { id: '3', labId: '67b5809921b8ad7af5c7c718', timeLimit: 20 }, // 10 minutes
+    { id: '1', labId: '67b5809921b8ad7af5c7c718', timeLimit: 10 }, // 5 minutes
+    { id: '2', labId: '67b45bbcd5395263fe8ebe11', timeLimit: 20 }, // 10 minutes
+    { id: '3', labId: '67b5809921b8ad7af5c7c718', timeLimit: 20 }, // 10 minutes
     { id: '4', labId: '67bd6053e81fd12957cf5225', timeLimit: 200 }, // 10 minutes
+    { id: '5', labId: '67ece62678376a434e78fd98', timeLimit: 100 }, // 10 minutes
 ];
 app.get('/questions', (req, res) => {
     res.json(questions);
