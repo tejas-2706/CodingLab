@@ -14,7 +14,7 @@ app.get('/',(req,res) => {
 })
 
 
-app.post('/generate-token', (req, res) => {
+app.get('/generate-token', (req, res) => {
     const jwtToken = jwt.sign(
         {
             labId: "67b43955f8dd885350eaab89",

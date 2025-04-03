@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
         message: "hello"
     });
 });
-app.post('/generate-token', (req, res) => {
+app.get('/generate-token', (req, res) => {
     const jwtToken = jsonwebtoken_1.default.sign({
         labId: "67b43955f8dd885350eaab89",
         userId: "123",
