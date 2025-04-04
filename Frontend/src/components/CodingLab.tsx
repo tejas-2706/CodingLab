@@ -66,8 +66,8 @@ export const CodingLab = () => {
         <div className="container mx-auto pl-2">
             <div className="font-bold text-xl">Your Own Coding Lab</div>
             <iframe 
-                width="1100"
-                height="600"
+                width="1250"
+                height="700"
                 src={`https://edudiagno.fermion.app/embed/lab?token=${labtoken}`}
                 title="Coding Lab"
                 frameBorder="0"

@@ -17,7 +17,8 @@ app.get('/',(req,res) => {
 app.get('/generate-token', (req, res) => {
     const jwtToken = jwt.sign(
         {
-            labId: "67b43955f8dd885350eaab89",
+            // labId: "67b43955f8dd885350eaab89",
+            labId: "67efaa30dea35ce7db97620c",
             userId: "123",
             playgroundOptions: {
                 isCodeCopyPasteAllowed: true,
