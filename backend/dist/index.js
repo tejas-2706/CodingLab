@@ -39,7 +39,7 @@ app.get('/generate-token', (req, res) => {
             }
         }
     }, process.env.FERMION_API_KEY, { expiresIn: "1h" });
-    console.log("JWTTTTT \n" + jwtToken);
+    // console.log("JWTTTTT \n" + jwtToken);
     res.json({ jwtToken });
 });
 app.post('/live-session-token', (req, res) => {

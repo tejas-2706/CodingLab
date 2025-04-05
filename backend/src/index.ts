@@ -31,7 +31,7 @@ app.get('/generate-token', (req, res) => {
         process.env.FERMION_API_KEY as string,
         { expiresIn: "1h" }
     );
-    console.log("JWTTTTT \n" + jwtToken);
+    // console.log("JWTTTTT \n" + jwtToken);
     res.json({jwtToken});
 });
 

@@ -52,7 +52,7 @@ export const CodingLab = () => {
         try {
             const response = await axios.get("http://localhost:3000/generate-token");
             setLabtoken(response.data.jwtToken);
-            console.log("Token retrieved:", response.data);
+            // console.log("Token retrieved:", response.data);
         } catch (error:any) {
             console.error("Failed to fetch token:", error.message);
         }
