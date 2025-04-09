@@ -5,7 +5,7 @@ export const CodingIo = () => {
     const [iotoken, setIotoken] = useState("");
     const session = async () => {
         const response = await axios.post("http://localhost:3000/coding-io-token")
-        console.log(response.data.jwtToken);
+        // console.log(response.data.jwtToken);
         setIotoken(response.data.jwtToken);
     }
     useEffect(() => {
