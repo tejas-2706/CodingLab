@@ -4,7 +4,7 @@ import { HomePage } from "./components/HomePageComponents/HomePage"
 import { PreExam } from "./components/InstructionPanelComponents/PreExam";
 import { UserIpAdd } from "./components/UserIpAdd";
 import { CodingLab } from "./components/CodingLab";
-// import DsaExecution from "./components/DsaExecution";
+import DsaExecution from "./components/DsaExecution";
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Route path="/instruction-panel" element={<PreExam/>}></Route>
         <Route path="/coding-exam" element={<QuizComponent/>}></Route>
         <Route path="/ip" element={<UserIpAdd/>}></Route>
-        {/* <Route path="/dsa" element={<DsaExecution/>}></Route> */}
+        <Route path="/dsa-exc" element={<DsaExecution/>}></Route>
         <Route path="/dsa" element={<CodingLab/>}></Route>
       </Routes>
     </div>
