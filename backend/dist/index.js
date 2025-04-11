@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 app.get('/generate-token', (req, res) => {
     const jwtToken = jsonwebtoken_1.default.sign({
         // labId: "67b43955f8dd885350eaab89",
-        labId: "67efaa30dea35ce7db97620c",
+        labId: "67f8bbf791f27b43b67ed926",
         userId: "123",
         playgroundOptions: {
             isCodeCopyPasteAllowed: true,
@@ -64,8 +64,8 @@ app.get('/questions', (req, res) => {
 app.post('/coding-io-token', (req, res) => {
     try {
         const jwtToken = jsonwebtoken_1.default.sign({
-            labId: '67b45bbcd5395263fe8ebe11',
-            userId: '<enter a user ID here unique to every user>',
+            labId: '67f8bbf791f27b43b67ed926',
+            userId: '1234',
         }, process.env.FERMION_API_KEY, { expiresIn: '1h' });
         res.json({ jwtToken });
     }
