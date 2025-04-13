@@ -2,15 +2,34 @@ import { Editor } from "@monaco-editor/react";
 import React from "react";
 import QuestionArea from "./QuestionArea";
 
+// type Language = 'C' | 'Python' | 'Java';
+
 function DsaExecution() {
-  const [code, setCode] = React.useState(
-    '#include <stdio.h>\nvoid main(){\nprintf("h");\n}'
-  );
+  // const [code, setCode] = React.useState(
+  //   '#include <stdio.h>\nvoid main(){\nprintf("h");\n}'
+  // );
   const [taskId, setTaskId] = React.useState("");
   const [output, setOutput] = React.useState("");
-  // const apiKey = import.meta.env.FERMION_API_KEY;
+  const apiKey = import.meta.env.VITE_FERMION_API_KEY;
+
   React.useEffect(() => console.log(taskId), [taskId]);
 
+  const availableLanguages:string[] = ['C', 'Python', 'Java'];
+  const codeTemplates:Record<string, string> = {
+    'C': '#include <stdio.h>\nint main(){\n\tprintf("Hello, World!");\n\treturn 0;\n}',
+    'Python': 'print("Hello, World!")',
+    'Java': 'public class Main {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello, World!");\n\t}\n}',
+  };
+  const monacoLanguages: Record<string,string>= {
+    'C': 'c',
+    'Python': 'python',
+    'Java': 'java',
+  };
+  const [selectedLanguage, setSelectedLanguage] = React.useState<string>('C');
+  const [code, setCode] = React.useState(codeTemplates['C']);
+  React.useEffect(() => {
+    setCode(codeTemplates[selectedLanguage]);
+  }, [selectedLanguage]);
   const handleCodeRun = () => {
     fetch(
       "https://backend.codedamn.com/api/public/request-dsa-code-execution",
@@ -18,13 +37,13 @@ function DsaExecution() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "FERMION-API-KEY": "",
+          "FERMION-API-KEY": apiKey,
         },
         body: JSON.stringify({
           data: [
             {
               data: {
-                language: "C",
+                language: selectedLanguage,
                 runConfig: {
                   customMatcherToUseForExpectedOutput: "ExactMatch",
                   expectedOutputAsBase64UrlEncoded: btoa("h")
@@ -65,7 +84,7 @@ function DsaExecution() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "FERMION-API-KEY": "",
+          "FERMION-API-KEY": apiKey,
         },
         body: JSON.stringify({
           data: [
@@ -99,6 +118,17 @@ function DsaExecution() {
       <div className="flex justify-center gap-6 p-2">
         <button className="bg-green-400 px-4 rounded-xl" onClick={handleCodeRun}>Run</button>
         <button className="bg-white px-4 text-black rounded-xl" onClick={handleViewStatus}>View Status</button>
+        <div className="">
+          <select
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+            className="bg-gray-700 text-white rounded"
+          >
+            {availableLanguages.map((lang) => (
+              <option key={lang} value={lang}>{lang}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="grid md:grid-cols-2 grid-cols-1">
         <div>
@@ -123,7 +153,7 @@ function DsaExecution() {
           <Editor
             height="360px"
             width="100%"
-            language="c"
+            language={monacoLanguages[selectedLanguage] || 'plaintext'}
             value={code}
             onChange={(value) => setCode(value || '')}
             theme="vs-dark"
