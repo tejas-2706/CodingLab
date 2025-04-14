@@ -11,20 +11,36 @@ function DsaExecution() {
   const [taskId, setTaskId] = React.useState("");
   const [output, setOutput] = React.useState("");
   const [codeError, setCodeError] = React.useState("");
+  const [syntaxError, setSyntaxError] = React.useState("");
+  const [runStatus, setRunStatus] = React.useState("");
   const apiKey = import.meta.env.VITE_FERMION_API_KEY;
 
   React.useEffect(() => console.log(taskId), [taskId]);
 
-  const availableLanguages:string[] = ['C', 'Python', 'Java'];
-  const codeTemplates:Record<string, string> = {
+  const availableLanguages: string[] = ['C', 'Python', 'Java', 'Cpp', 'Nodejs'];
+
+  const expectedOutput = "Hello"; // set What result is required here nowww ...
+
+  // const codeTemplates:Record<string, string> = {
+  //   'C': '#include <stdio.h>\nint main(){\n\tprintf("Hello, World!");\n\treturn 0;\n}',
+  //   'Python': 'print("Hello, World!")',
+  //   'Java': 'public class Main {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello, World!");\n\t}\n}',
+  // };
+  const codeTemplates: Record<string, string> = {
     'C': '#include <stdio.h>\nint main(){\n\tprintf("Hello, World!");\n\treturn 0;\n}',
     'Python': 'print("Hello, World!")',
     'Java': 'public class Main {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello, World!");\n\t}\n}',
+    'Cpp': '#include <iostream>\nint main() {\n\tstd::cout << "Hello, World!" << std::endl;\n\treturn 0;\n}',
+    // 'sqlite_3_48_0': 'SELECT "Hello, World!" AS message;',
+    'Nodejs': 'console.log("Hello, World!");',
   };
-  const monacoLanguages: Record<string,string>= {
+  const monacoLanguages: Record<string, string> = {
     'C': 'c',
     'Python': 'python',
     'Java': 'java',
+    'Cpp': 'cpp',
+    // 'sqlite_3_48_0': 'sql',
+    'Nodejs': 'javascript',
   };
   const [selectedLanguage, setSelectedLanguage] = React.useState<string>('C');
   const [code, setCode] = React.useState(codeTemplates['C']);
@@ -47,12 +63,12 @@ function DsaExecution() {
                 language: selectedLanguage,
                 runConfig: {
                   customMatcherToUseForExpectedOutput: "ExactMatch",
-                  expectedOutputAsBase64UrlEncoded: btoa("h")
+                  expectedOutputAsBase64UrlEncoded: btoa(expectedOutput) // TO set Expected output 
                     .replace(/\+/g, "-")
                     .replace(/\//g, "_")
                     .replace(/=+$/, ""),
                   stdinStringAsBase64UrlEncoded: "",
-                  // callbackUrlOnExecutionCompletion: "", this is commented line one 
+                  // callbackUrlOnExecutionCompletion: "", // this is commented line one 
                   shouldEnablePerProcessAndThreadCpuTimeLimit: false,
                   shouldEnablePerProcessAndThreadMemoryLimit: false,
                   shouldAllowInternetAccess: false,
@@ -101,17 +117,28 @@ function DsaExecution() {
       .then((res) => res.json())
       .then((body) => {
         let data = body[0].output.data.runResult;
-        console.log("Dataaa = " , data);
-        let err = data.programRunData.stderrBase64UrlEncoded
+        console.log("Dataaa = ", data);
+        if(data.programRunData != null){
+          let err = data.programRunData.stderrBase64UrlEncoded
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+          console.log("error = ", atob(err));
+          setCodeError(atob(err));
+          let output = data.programRunData.stdoutBase64UrlEncoded
+            .replace(/-/g, "+")
+            .replace(/_/g, "/");
+          console.log("o/p - ", atob(output));
+          setOutput(atob(output)) // output final
+        }
+
+        let compiler_syntax_error = data.compilerOutputAfterCompilationBase64UrlEncoded
           .replace(/-/g, "+")
           .replace(/_/g, "/");
-        console.log("error = " , atob(err));
-        setCodeError(atob(err));
-        let output = data.programRunData.stdoutBase64UrlEncoded
-          .replace(/-/g, "+")
-          .replace(/_/g, "/");
-        console.log("o/p - ", atob(output));
-        setOutput(atob(output)) // output final
+        // console.log("checkinggg = ",atob(compiler_syntax_error));
+        setSyntaxError(atob(compiler_syntax_error))
+
+        let run_status = data.runStatus;
+        setRunStatus(run_status);
       });
   };
 
@@ -168,8 +195,13 @@ function DsaExecution() {
           />
           <div className="p-4 bg-[#27272a] mt-4 rounded-xl text-white">
             <h1>Output - </h1>
-            <div className="text-green-400">{output}</div>
+            {runStatus == 'compilation-error'? <div></div>:<div className="text-green-400">{output}</div>}
             <div className="text-red-500">{codeError}</div>
+            <div className="text-red-500">{syntaxError}</div>
+            <h1>Expected Output is - </h1>
+            <div className="text-yellow-400">{expectedOutput}</div>
+            <h1>Your Result Status - </h1>
+            <div className={`${runStatus == 'successful'? 'text-green-400' : 'text-red-500'}`}>{runStatus}</div>
           </div>
         </div>
       </div>
