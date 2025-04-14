@@ -10,6 +10,7 @@ function DsaExecution() {
   // );
   const [taskId, setTaskId] = React.useState("");
   const [output, setOutput] = React.useState("");
+  const [codeError, setCodeError] = React.useState("");
   const apiKey = import.meta.env.VITE_FERMION_API_KEY;
 
   React.useEffect(() => console.log(taskId), [taskId]);
@@ -51,7 +52,7 @@ function DsaExecution() {
                     .replace(/\//g, "_")
                     .replace(/=+$/, ""),
                   stdinStringAsBase64UrlEncoded: "",
-                  // callbackUrlOnExecutionCompletion: "",
+                  // callbackUrlOnExecutionCompletion: "", this is commented line one 
                   shouldEnablePerProcessAndThreadCpuTimeLimit: false,
                   shouldEnablePerProcessAndThreadMemoryLimit: false,
                   shouldAllowInternetAccess: false,
@@ -100,16 +101,17 @@ function DsaExecution() {
       .then((res) => res.json())
       .then((body) => {
         let data = body[0].output.data.runResult;
-        console.log(data);
+        console.log("Dataaa = " , data);
         let err = data.programRunData.stderrBase64UrlEncoded
           .replace(/-/g, "+")
           .replace(/_/g, "/");
-        console.log(atob(err));
+        console.log("error = " , atob(err));
+        setCodeError(atob(err));
         let output = data.programRunData.stdoutBase64UrlEncoded
           .replace(/-/g, "+")
           .replace(/_/g, "/");
         console.log("o/p - ", atob(output));
-        setOutput(atob(output))
+        setOutput(atob(output)) // output final
       });
   };
 
@@ -166,7 +168,8 @@ function DsaExecution() {
           />
           <div className="p-4 bg-[#27272a] mt-4 rounded-xl text-white">
             <h1>Output - </h1>
-            {output}
+            <div className="text-green-400">{output}</div>
+            <div className="text-red-500">{codeError}</div>
           </div>
         </div>
       </div>
