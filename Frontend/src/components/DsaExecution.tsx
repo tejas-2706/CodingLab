@@ -1,8 +1,8 @@
 import { Editor } from "@monaco-editor/react";
 import React from "react";
 import QuestionArea from "./QuestionArea";
-
-// type Language = 'C' | 'Python' | 'Java';
+import { Play, Terminal } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 function DsaExecution() {
   // const [code, setCode] = React.useState(
@@ -118,7 +118,7 @@ function DsaExecution() {
       .then((body) => {
         let data = body[0].output.data.runResult;
         console.log("Dataaa = ", data);
-        if(data.programRunData != null){
+        if (data.programRunData != null) {
           let err = data.programRunData.stderrBase64UrlEncoded
             .replace(/-/g, "+")
             .replace(/_/g, "/");
@@ -145,13 +145,16 @@ function DsaExecution() {
   return (
     <div className="bg-[#18181b]">
       <div className="flex justify-center gap-6 p-2">
-        <button className="bg-green-400 px-4 rounded-xl" onClick={handleCodeRun}>Run</button>
+        <button className="flex bg-green-400 px-4 rounded-xl py-1 justify-center items-center gap-1" onClick={handleCodeRun}>
+          <span><Play fill="white" color="white" size={15} /></span>
+          <span className="text-white">Run</span>
+        </button>
         <button className="bg-white px-4 text-black rounded-xl" onClick={handleViewStatus}>View Status</button>
         <div className="">
           <select
             value={selectedLanguage}
             onChange={(e) => setSelectedLanguage(e.target.value)}
-            className="bg-gray-700 text-white rounded"
+            className="bg-[#27272a] text-white rounded p-1 pr-10"
           >
             {availableLanguages.map((lang) => (
               <option key={lang} value={lang}>{lang}</option>
@@ -159,26 +162,26 @@ function DsaExecution() {
           </select>
         </div>
       </div>
-      <div className="grid md:grid-cols-2 grid-cols-1">
+      <div className="grid md:grid-cols-2 grid-cols-1 h-[100vh] gap-4 p-2">
         <div>
-          <QuestionArea />
+          <QuestionArea
+            title="EduDiagno - Question 1"
+            successRate="Success rate: 2.56%"
+            questionNumber="1."
+            questionTitle="Two Sum"
+            difficulty="Easy"
+            description={
+              <>
+                Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.
+              </>
+            }
+            constraints="You may assume that each input would have exactly one solution, and you may not use the same element twice. You can return the answer in any order."
+            testCases={[
+              { input: "nums = [2,7,11,15], target = 9", expectedOutput: "[0,1]" },
+            ]}
+          />
         </div>
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              gap: "1rem",
-            }}
-          >
-          </div>
-          {/* <textarea
-        className="bg-gray-300"
-        style={{ width: "100%", height: "360px" }}
-        value={code}
-        onChange={(e) => setCode(e.target.value)}
-      ></textarea> */}
+        <div className=" h-[86vh] bg-[#27272a] rounded-xl">
           <Editor
             height="360px"
             width="100%"
@@ -193,16 +196,36 @@ function DsaExecution() {
               automaticLayout: true,
             }}
           />
-          <div className="p-4 bg-[#27272a] mt-4 rounded-xl text-white">
-            <h1>Output - </h1>
-            {runStatus == 'compilation-error'? <div></div>:<div className="text-green-400">{output}</div>}
-            <div className="text-red-500">{codeError}</div>
-            <div className="text-red-500">{syntaxError}</div>
-            <h1>Expected Output is - </h1>
-            <div className="text-yellow-400">{expectedOutput}</div>
-            <h1>Your Result Status - </h1>
-            <div className={`${runStatus == 'successful'? 'text-green-400' : 'text-red-500'}`}>{runStatus}</div>
-          </div>
+          <div className="bg-[#18181b] p-2"></div>
+          <Tabs defaultValue="result" className="w-full ">
+            <div className="bg-[#27272a] mt-2 rounded-xl text-white p-2 ">
+              <TabsList className="bg-[#3f3f45] w-full justify-start rounded-xl">
+                <TabsTrigger value="result"
+                  className="data-[state=active]:bg-[#27272a] rounded-xl"
+                >Result</TabsTrigger>
+                <TabsTrigger value="test-case"
+                  className="data-[state=active]:bg-[#27272a] rounded-xl"
+                >Test Case</TabsTrigger>
+              </TabsList>
+              <TabsContent value="result" className="py-2">
+                {runStatus == 'compilation-error' ? <div></div> : <div className="flex gap-2 text-green-400">
+                  <Terminal />{output}
+                </div>}
+                <div className="text-red-500">{codeError}</div>
+                <div className="text-red-500">{syntaxError}</div>
+                <h1>Result Status - </h1>
+                <div className={`${runStatus == 'successful' ? 'text-green-400' : 'text-red-500'}`}>{runStatus}</div>
+                <h1>Expected Output - </h1>
+                <div className="text-yellow-400">{expectedOutput}</div>
+              </TabsContent>
+              <TabsContent value="test-case" className="py-2">
+                <h1>Test Case - </h1>
+                <div className={`${runStatus == 'successful' ? 'text-green-400' : 'text-red-500'}`}>{runStatus}</div>
+                <h1>Expected Output - </h1>
+                <div className="text-yellow-400">{expectedOutput}</div>
+              </TabsContent>
+            </div>
+          </Tabs>
         </div>
       </div>
     </div>
